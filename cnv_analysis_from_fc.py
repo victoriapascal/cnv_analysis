@@ -419,3 +419,6 @@ if __name__ == "__main__":
 	##save log2 counts and segments in a dict
 	json.dump(chr_log_values, open(output_dir + run + '_log2_sample_' + pair + '.txt','w'))
 	json.dump(segment_coords, open(output_dir + run + '_segments_sample_' + pair + '.txt','w'))
+
+	##eg of how to run it:
+	##python cnv_analysis_from_fc.py fc_ALU017.tsv 8-9
