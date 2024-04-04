@@ -226,7 +226,7 @@ def get_segment_regions(chromosome_lengths, chr_segments, chr_log2):
 			indices_s = [i for i in range(len(chr_log2[ch])) if chr_log2[ch][i] == v1]
 			indices_e = [i for i in range(len(chr_log2[ch])) if chr_log2[ch][i] == v2]
 			
-			print(ch, len(chr_segments[ch]), start_segment, end_segment, counts_start, counts_end)
+			print(ch, len(chr_segments[ch]), chr_segments[ch], start_segment, end_segment, counts_start, counts_end, coords_end)
 			if counts_start == 1 and counts_end == 1:
 			# if counts_start == 1 and counts_end == 1 or not coords_end:
 				log2_segment = chr_log2[ch][start_segment:end_segment]
@@ -238,43 +238,84 @@ def get_segment_regions(chromosome_lengths, chr_segments, chr_log2):
 					coords_end.append(end_segment)
 			else:
 				if not coords_end:
-					log2_segment = chr_log2[ch][start_segment:end_segment]
-					log2_segment_wo_nones = [a for a in log2_segment if a is not None]
-					if log2_segment_wo_nones: 
+					print('one')
+					if len(chr_segments[ch]) == 1:
+						log2_segment = chr_log2[ch][indices_s[0]:indices_e[-1]]
+						log2_segment_wo_nones = [a for a in log2_segment if a is not None]
 						segment_mean = np.mean(np.array(log2_segment_wo_nones))
-						record = [x_axis[start_segment], x_axis[end_segment], segment_mean]
-						segment_regions[ch].append(record)
-						coords_end.append(end_segment)
+						record = [x_axis[indices_s[0]], x_axis[indices_e[-1]], segment_mean]
+						segment_regions[ch] = [record]
 
-				if counts_start > 1:
-					log2_segment = chr_log2[ch][coords_end[-1]:end_segment]
-					log2_segment_wo_nones = [a for a in log2_segment if a is not None]
-					segment_mean = np.mean(np.array(log2_segment_wo_nones))
-					record = [x_axis[coords_end[-1]], x_axis[end_segment], segment_mean]
-					segment_regions[ch].append(record)
-					coords_end.append(end_segment)
+					else:
 
-				elif counts_end > 1 and len(chr_segments[ch]) == 1:
-					log2_segment = chr_log2[ch][start_segment:indices_e[-1]]
-					log2_segment_wo_nones = [a for a in log2_segment if a is not None]
-					segment_mean = np.mean(np.array(log2_segment_wo_nones))
-					record = [x_axis[start_segment], x_axis[indices_e[-1]], segment_mean]
-					segment_regions[ch] = [record]
+						log2_segment = chr_log2[ch][start_segment:end_segment]
+						log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+						if log2_segment_wo_nones: 
+							segment_mean = np.mean(np.array(log2_segment_wo_nones))
+							record = [x_axis[start_segment], x_axis[end_segment], segment_mean]
+							segment_regions[ch].append(record)
+							coords_end.append(end_segment)
+
+				# if counts_start > 1:
+				# 	print('two')
+				# 	log2_segment = chr_log2[ch][coords_end[-1]:end_segment]
+				# 	log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+				# 	segment_mean = np.mean(np.array(log2_segment_wo_nones))
+				# 	record = [x_axis[coords_end[-1]], x_axis[end_segment], segment_mean]
+				# 	segment_regions[ch].append(record)
+				# 	coords_end.append(end_segment)
+
+				# elif counts_start > 1 and  len(chr_segments[ch]) == 1:
+				# 	print('three')
+				# 	log2_segment = chr_log2[ch][coords_end[-1]:end_segment]
+				# 	log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+				# 	segment_mean = np.mean(np.array(log2_segment_wo_nones))
+				# 	record = [x_axis[coords_end[-1]], x_axis[end_segment], segment_mean]
+				# 	segment_regions[ch] = [record]
+				# 	coords_end.append(end_segment)
+
+
+				# elif counts_end > 1 and len(chr_segments[ch]) == 1:
+				# 	print('four')
+				# 	log2_segment = chr_log2[ch][start_segment:indices_e[-1]]
+				# 	log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+				# 	segment_mean = np.mean(np.array(log2_segment_wo_nones))
+				# 	record = [x_axis[start_segment], x_axis[indices_e[-1]], segment_mean]
+				# 	segment_regions[ch] = [record]
 	
-					# coords_end.append(end_segment)
+				# 	# coords_end.append(end_segment)
+
+				# elif counts_end > 1 and counts_start > 1 and len(chr_segments[ch]) == 1:
+				# 	print('four2')
+				# 	log2_segment = chr_log2[ch][indices_s[0]:indices_e[-1]]
+				# 	log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+				# 	segment_mean = np.mean(np.array(log2_segment_wo_nones))
+				# 	record = [x_axis[indices_s[0]], x_axis[indices_e[-1]], segment_mean]
+				# 	segment_regions[ch] = [record]
+	
 
 				else:
+					print('five')
 					for num in indices_e: ## use the next index larger than v[1]
 						if num >= v[1]:
 							win = indices_e.index(num)
 							break
-					log2_segment = chr_log2[ch][start_segment:indices_e[win]]
-					log2_segment_wo_nones = [a for a in log2_segment if a is not None]
-					segment_mean = np.mean(np.array(log2_segment_wo_nones))
+					if counts_start > 1:
+						log2_segment = chr_log2[ch][start_segment:indices_e[win]]
+						log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+						segment_mean = np.mean(np.array(log2_segment_wo_nones))
 
-					record = [x_axis[start_segment], x_axis[indices_e[win]], segment_mean]
-					segment_regions[ch].append(record)
-					coords_end.append(indices_e[win])
+						record = [x_axis[coords_end[-1]], x_axis[indices_e[win]], segment_mean] ##problem: start_segment has duplicates counts!
+						segment_regions[ch].append(record)
+						coords_end.append(indices_e[win])
+					else:
+						log2_segment = chr_log2[ch][start_segment:indices_e[win]]
+						log2_segment_wo_nones = [a for a in log2_segment if a is not None]
+						segment_mean = np.mean(np.array(log2_segment_wo_nones))
+
+						record = [x_axis[start_segment], x_axis[indices_e[win]], segment_mean] ##problem: start_segment has duplicates counts!
+						segment_regions[ch].append(record)
+						coords_end.append(indices_e[win])
 
 	return segment_regions
 
