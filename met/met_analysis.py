@@ -308,8 +308,8 @@ if __name__ == "__main__":
 	alu = os.listdir(sys.argv[1]) 
 	pair = sys.argv[2] #1-2
 
-	d1 = '{:02d}'.format(pair.split(',')[0])
-	d2 = '{:02d}'.format(pair.split(',')[1])
+	d1 = '{:02d}'.format(int(pair.split('-')[0]))
+	d2 = '{:02d}'.format(int(pair.split('-')[1]))
 
 	name1 = alu[0].split('_')[0] + '_' + str(d1)
 	name2 = alu[0].split('_')[0] + '_' + str(d2)
