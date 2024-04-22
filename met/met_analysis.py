@@ -186,6 +186,7 @@ def plot_scatter_chs(bins1, bins2, chromosome_lengths, name1, name2):
 		row_index = i // num_cols
 		col_index = i % num_cols
 		ax = axs[row_index, col_index] if num_rows > 1 else axs[col_index]
+		print(ax)
 		
 		# x_axis_all = [int(x.split(':')[1].split(' ')[0].split('-')[1]) for x in c1[chromosome]]
 		x_axis = [int(i) for i in bins1[chromosome]]
@@ -305,65 +306,65 @@ if __name__ == "__main__":
 	    'X': 155246021,
 	    'Y': 59033256}
 	
-	alu = os.listdir(sys.argv[1]) 
-	pair = sys.argv[2] #1-2
+	# alu = os.listdir(sys.argv[1]) 
+	# pair = sys.argv[2] #1-2
 
-	d1 = '{:02d}'.format(int(pair.split('-')[0]))
-	d2 = '{:02d}'.format(int(pair.split('-')[1]))
+	# d1 = '{:02d}'.format(int(pair.split('-')[0]))
+	# d2 = '{:02d}'.format(int(pair.split('-')[1]))
 
-	name1 = alu[0].split('_')[0] + '_' + str(d1)
-	name2 = alu[0].split('_')[0] + '_' + str(d2)
+	# name1 = alu[0].split('_')[0] + '_' + str(d1)
+	# name2 = alu[0].split('_')[0] + '_' + str(d2)
 
-	for a in alu:
-		if a.startswith(name1):
-			f = sys.argv[1] + os.sep + a	
-		if a.startswith(name2):
-			f2 = sys.argv[1] + os.sep + a
+	# for a in alu:
+	# 	if a.startswith(name1):
+	# 		f = sys.argv[1] + os.sep + a	
+	# 	if a.startswith(name2):
+	# 		f2 = sys.argv[1] + os.sep + a
 
-	# name1 = 'run75_01'
-	# name2 = 'run75_02'
+	name1 = 'run75_01'
+	name2 = 'run75_02'
 
-	# f = 'run75_01_001_GGTAGC.RGok.MAPQ.sorted.markdupAniling.merged.mapped'
-	# f2 = 'run75_02_001_ATGAGC.RGok.MAPQ.sorted.markdupAniling.merged.mapped'
+	f = 'run75_01_001_GGTAGC.RGok.MAPQ.sorted.markdupAniling.merged.mapped'
+	f2 = 'run75_02_001_ATGAGC.RGok.MAPQ.sorted.markdupAniling.merged.mapped'
 	
 	outf =  name1 + '_meth_per_alu.tsv'
 	outf2 =  name2 + '_meth_per_alu.tsv'
 
-	remove = alus_to_discard('Alus_to_discard.txt')
+	# remove = alus_to_discard('Alus_to_discard.txt')
 	
-	counts1, total_reads1 = get_met_counts(f, remove, outf)
-	counts2, total_reads2 = get_met_counts(f2, remove, outf2)
+	# counts1, total_reads1 = get_met_counts(f, remove, outf)
+	# counts2, total_reads2 = get_met_counts(f2, remove, outf2)
 	
-	outb1 =  name1 + '_meth_per_alu_bins.tsv'
-	outb2 =  name2 + '_meth_per_alu_bins.tsv'
-
-	
-	bins1 = get_bins(counts1, chromosome_lengths, threshold, outb1)
-	bins2 = get_bins(counts2, chromosome_lengths, threshold, outb2)
-
-
-	bins1 = json.load(open('counts_' + name1 + '.txt'))
-	bins2 = json.load(open('counts_' + name2 + '.txt'))
-
-	total_reads1 = 1528645
-	total_reads2 = 1118578
+	# outb1 =  name1 + '_meth_per_alu_bins.tsv'
+	# outb2 =  name2 + '_meth_per_alu_bins.tsv'
 
 	
-	norm1 = normalize_bins_total_counts(bins1, total_reads1)
-	norm2 = normalize_bins_total_counts(bins2, total_reads2)
+	# bins1 = get_bins(counts1, chromosome_lengths, threshold, outb1)
+	# bins2 = get_bins(counts2, chromosome_lengths, threshold, outb2)
 
-	outm1 = name1 + '_meth_per_alu_bins_norm.tsv'
-	outm2 = name2 + '_meth_per_alu_bins_norm.tsv'
+
+	# bins1 = json.load(open('counts_' + name1 + '.txt'))
+	# bins2 = json.load(open('counts_' + name2 + '.txt'))
+
+	# total_reads1 = 1528645
+	# total_reads2 = 1118578
+
 	
-	mean1 = compute_mean(norm1, chromosome_lengths, threshold, outm1)
-	mean2 = compute_mean(norm2, chromosome_lengths, threshold, outm2)
+	# norm1 = normalize_bins_total_counts(bins1, total_reads1)
+	# norm2 = normalize_bins_total_counts(bins2, total_reads2)
 
-	json.dump(mean1, open('counts_' + name1 + '.txt','w'))
-	json.dump(mean2, open('counts_' + name2 +'.txt','w'))
+	# outm1 = name1 + '_meth_per_alu_bins_norm.tsv'
+	# outm2 = name2 + '_meth_per_alu_bins_norm.tsv'
+	
+	# mean1 = compute_mean(norm1, chromosome_lengths, threshold, outm1)
+	# mean2 = compute_mean(norm2, chromosome_lengths, threshold, outm2)
+
+	# json.dump(mean1, open('counts_' + name1 + '.txt','w'))
+	# json.dump(mean2, open('counts_' + name2 +'.txt','w'))
 
 
-	# mean1 = json.load(open('counts_' + name1 + '.txt'))
-	# mean2 = json.load(open('counts_' + name2 + '.txt'))
+	mean1 = json.load(open('counts_' + name1 + '.txt'))
+	mean2 = json.load(open('counts_' + name2 + '.txt'))
 
 
 	plot_scatter_chs(mean1, mean2, chromosome_lengths, name1, name2)
